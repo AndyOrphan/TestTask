@@ -29,13 +29,9 @@ class BigImageViewController: UIViewController {
     }
     
     func fillData() {
-        imageView.backgroundColor = UIColor.blue // TEST
+        imageView.backgroundColor = UIColor.groupTableViewBackground
+        imageView.contentMode = .scaleAspectFit
         imageView.image = selectedImage ?? nil
-        
-        ServerManager.shared.testDownloadImage(callback: { image in
-            self.imageView.image = image
-        })
-        
         nameLabel.text = selectedName ?? "teeest"
     }
     

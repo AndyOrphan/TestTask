@@ -9,9 +9,16 @@
 import UIKit
 import RealmSwift
 
-class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     let mainTableView = UITableView()
+    var realm: Realm!
+    
+    var imageModels:Results<ImageModel>! {
+        didSet {
+            mainTableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +27,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         mainTableView.delegate = self
         mainTableView.dataSource = self
         
-        ServerManager.shared.testConnection()
+        realm = try! Realm()
+        imageModels = realm.objects(ImageModel.self).sorted(byKeyPath: "date", ascending: false)
+        
         // Do any additional setup after loading the view.
     }
     
@@ -33,11 +42,26 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     //MARK: UI
     
+    
+    
     func setupViews() {
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(mainTableView)
         
         setupConstraints()
+        setupSearchTextField()
+    }
+    
+    func setupSearchTextField() {
+        let screenWidth = UIScreen.main.bounds.width
+        let searchTextField = UITextField(frame: CGRect(x: 0, y: 0, width: screenWidth * 0.7, height: 40))
+        searchTextField.placeholder = "search"
+        searchTextField.borderStyle = .roundedRect
+        searchTextField.backgroundColor = UIColor.white
+        self.navigationItem.titleView = searchTextField
+        
+        searchTextField.delegate = self
+        
     }
     
     func setupConstraints() {
@@ -84,19 +108,59 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     //MARK: TableView Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return imageModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let imageModel = imageModels[indexPath.row]
         let cell = UITableViewCell()
-        cell.textLabel?.text = "test"
-        cell.imageView?.image = nil
+        cell.textLabel?.text = imageModel.searchWord
+        cell.imageView?.image = UIImage(data: imageModel.downloadedImage)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let bigImageVC = BigImageViewController()
+        let imageModel = imageModels[indexPath.row]
+        bigImageVC.selectedImage = UIImage(data: imageModel.downloadedImage)
+        bigImageVC.selectedName = imageModel.searchWord
         self.navigationController?.pushViewController(bigImageVC, animated: true)
+    }
+    
+    //MARK: Server methods
+    
+    func searchImage(with query: String) {
+        ServerManager.shared.searchImage(with: query, callback: { name, imageData in
+            
+            let imageModel = ImageModel()
+            imageModel.downloadedImage = imageData
+            imageModel.searchWord = name
+            imageModel.date = Date()
+            self.saveImage(with: imageModel)
+            
+        })
+    }
+    
+    func saveImage(with model: ImageModel) {
+        try! realm.write {
+            realm.add(model)
+            self.mainTableView.reloadData()
+        }
+    }
+    
+    //MARK: SearchField Methods
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if let searchText = textField.text {
+            if searchText.count > 0 {
+                searchImage(with: searchText)
+            }
+        }
+        textField.resignFirstResponder()
+        textField.text = ""
+        
+        return true
     }
 
 }

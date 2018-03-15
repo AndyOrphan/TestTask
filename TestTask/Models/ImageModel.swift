@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import RealmSwift
 
-class ImageModel: NSObject {
-    @objc dynamic var searchWord: String?
-    @objc dynamic var downloadedImage: UIImage?
+class ImageModel: Object {
+    
+    @objc dynamic var searchWord: String!
+    @objc dynamic var downloadedImage: Data!
+    @objc dynamic var date: Date!
+    
 }

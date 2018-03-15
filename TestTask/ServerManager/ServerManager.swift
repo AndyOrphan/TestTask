@@ -12,13 +12,15 @@ class ServerManager: NSObject {
     
     static let shared = ServerManager()
     
-    let mainUrl = "https://api.gettyimages.com/v3/search/images?fields=thumb&sort_order=best&phrase=cat"
+    let mainUrl = "https://api.gettyimages.com/v3/search/images?fields=thumb&sort_order=best&phrase="
     
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
     
-    func testConnection() {
-        let url: URL = URL(string: mainUrl)!
+    func searchImage(with query: String, callback: @escaping (_ name: String, _ image: Data) -> ()) {
+        guard let url: URL = URL(string: mainUrl + query) else {
+            return
+        }
         var request = URLRequest(url: url)
         
         request.addValue("qqkev4dws7f9q3tvc9mb3hzy", forHTTPHeaderField: "Api-Key")
@@ -34,18 +36,33 @@ class ServerManager: NSObject {
                 return
             }
             
-            let json = try! JSONSerialization.jsonObject(with: data, options: [])
+            guard let resDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                return
+            }
             
-            print(json)
+            if let array = resDict["images"] as? [[String: Any]] {
+                if let first = array.first {
+                    if let displaySizes = first["display_sizes"] as? [[String: Any]] {
+                        if let thumb = displaySizes.first {
+                            if let url = thumb["uri"] as? String {
+                                self.downloadImage(with: url, callback: { imageData in
+                                    DispatchQueue.main.async {
+                                        callback(query, imageData)
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }
+            }
             
         }).resume()
         
     }
     
-    func testDownloadImage(callback: @escaping (_ image: UIImage)->()) {
-        let testUrlStr = "https://media.gettyimages.com/photos/lovely-kitten-on-sleeping-picture-id855294686?b=1&k=6&m=855294686&s=170x170&h=ZFkni97Kv6zou2jXMYcmyvVpALv9j0caTIWb6faqc5o="
+    func downloadImage(with urlStr: String , callback: @escaping (_ imageData: Data)->()) {
         
-        let url: URL = URL(string: testUrlStr)!
+        let url: URL = URL(string: urlStr)!
         var request = URLRequest(url: url)
         
         request.addValue("qqkev4dws7f9q3tvc9mb3hzy", forHTTPHeaderField: "Api-Key")
@@ -62,9 +79,9 @@ class ServerManager: NSObject {
             }
             
             DispatchQueue.main.async {
-                if let image = UIImage(data: data) {
-                    callback(image)
-                }
+                //if let image = UIImage(data: data) {
+                    callback(data)
+                //}
             }
             
         }).resume()
