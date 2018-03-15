@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -19,15 +20,19 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         mainTableView.delegate = self
         mainTableView.dataSource = self
         
+        ServerManager.shared.testConnection()
         // Do any additional setup after loading the view.
     }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    //MARK: UI
+    
     func setupViews() {
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(mainTableView)
@@ -85,7 +90,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         cell.textLabel?.text = "test"
+        cell.imageView?.image = nil
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let bigImageVC = BigImageViewController()
+        self.navigationController?.pushViewController(bigImageVC, animated: true)
     }
 
 }

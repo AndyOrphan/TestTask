@@ -14,6 +14,7 @@
 		894716E2205A55A8009F1DDD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E1205A55A8009F1DDD /* MainViewController.swift */; };
 		894716E4205A55CD009F1DDD /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E3205A55CD009F1DDD /* ServerManager.swift */; };
 		894716E6205A55ED009F1DDD /* ImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E5205A55ED009F1DDD /* ImageModel.swift */; };
+		894716E8205A5F1E009F1DDD /* BigImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E7205A5F1E009F1DDD /* BigImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		894716E1205A55A8009F1DDD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		894716E3205A55CD009F1DDD /* ServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
 		894716E5205A55ED009F1DDD /* ImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModel.swift; sourceTree = "<group>"; };
+		894716E7205A5F1E009F1DDD /* BigImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigImageViewController.swift; sourceTree = "<group>"; };
 		AD2F0D98BD77839F19E746DF /* Pods-TestTask.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestTask.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestTask/Pods-TestTask.release.xcconfig"; sourceTree = "<group>"; };
 		EC084B09A01C5D54A3C3691E /* Pods-TestTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestTask.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestTask/Pods-TestTask.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				894716E1205A55A8009F1DDD /* MainViewController.swift */,
+				894716E7205A5F1E009F1DDD /* BigImageViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 			files = (
 				894716CD205A550C009F1DDD /* AppDelegate.swift in Sources */,
 				894716E4205A55CD009F1DDD /* ServerManager.swift in Sources */,
+				894716E8205A5F1E009F1DDD /* BigImageViewController.swift in Sources */,
 				894716E2205A55A8009F1DDD /* MainViewController.swift in Sources */,
 				894716E6205A55ED009F1DDD /* ImageModel.swift in Sources */,
 			);
