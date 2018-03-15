@@ -19,42 +19,56 @@ class ServerManager: NSObject {
     
     func searchImage(with query: String, callback: @escaping (_ name: String, _ image: Data) -> ()) {
         guard let url: URL = URL(string: mainUrl + query) else {
+            self.postErrorNotification(error: "No Results")
             return
         }
         var request = URLRequest(url: url)
         
         request.addValue("qqkev4dws7f9q3tvc9mb3hzy", forHTTPHeaderField: "Api-Key")
         
-        
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             guard error == nil else {
-                print(error!)
+                self.postErrorNotification(error: error?.localizedDescription ?? "No Results")
                 return
             }
             guard let data = data else {
-                print("Data is empty")
+                self.postErrorNotification(error: "No Results")
                 return
             }
-            
-            guard let resDict = try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                return
-            }
-            
-            if let array = resDict["images"] as? [[String: Any]] {
-                if let first = array.first {
-                    if let displaySizes = first["display_sizes"] as? [[String: Any]] {
-                        if let thumb = displaySizes.first {
-                            if let url = thumb["uri"] as? String {
-                                self.downloadImage(with: url, callback: { imageData in
-                                    DispatchQueue.main.async {
-                                        callback(query, imageData)
-                                    }
-                                })
-                            }
-                        }
-                    }
+            do {
+                guard let resDict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    self.postErrorNotification(error: "No Results")
+                    return
                 }
+                guard let array = resDict["images"] as? [[String: Any]] else {
+                    self.postErrorNotification(error: "No Results")
+                    return
+                }
+                guard  let first = array.first else {
+                    self.postErrorNotification(error: "No Results")
+                    return
+                }
+                guard let displaySizes = first["display_sizes"] as? [[String: Any]] else {
+                    self.postErrorNotification(error: "No Results")
+                    return
+                }
+                guard let thumb = displaySizes.first else {
+                    self.postErrorNotification(error: "No Results")
+                    return
+                }
+                if let url = thumb["uri"] as? String {
+                    self.downloadImage(with: url, callback: { imageData in
+                        DispatchQueue.main.async {
+                            callback(query, imageData)
+                        }
+                    })
+                } else {
+                    self.postErrorNotification(error: "No Results")
+                }
+            } catch {
+                self.postErrorNotification(error: "No Results")
             }
+            
             
         }).resume()
         
@@ -70,21 +84,22 @@ class ServerManager: NSObject {
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             guard error == nil else {
-                print(error!)
+                self.postErrorNotification(error: "Invalid Image")
                 return
             }
             guard let data = data else {
-                print("Data is empty")
+                self.postErrorNotification(error: "Invalid Image")
                 return
             }
             
             DispatchQueue.main.async {
-                //if let image = UIImage(data: data) {
-                    callback(data)
-                //}
+                callback(data)
             }
             
         }).resume()
     }
     
+    func postErrorNotification(error: String) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Consts.errorNotificationName), object: nil, userInfo: ["errorStr":error])
+    }
 }

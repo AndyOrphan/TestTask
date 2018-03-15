@@ -15,6 +15,7 @@
 		894716E4205A55CD009F1DDD /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E3205A55CD009F1DDD /* ServerManager.swift */; };
 		894716E6205A55ED009F1DDD /* ImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E5205A55ED009F1DDD /* ImageModel.swift */; };
 		894716E8205A5F1E009F1DDD /* BigImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716E7205A5F1E009F1DDD /* BigImageViewController.swift */; };
+		894716EB205AF35C009F1DDD /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894716EA205AF35C009F1DDD /* Consts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		894716E3205A55CD009F1DDD /* ServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
 		894716E5205A55ED009F1DDD /* ImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModel.swift; sourceTree = "<group>"; };
 		894716E7205A5F1E009F1DDD /* BigImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigImageViewController.swift; sourceTree = "<group>"; };
+		894716EA205AF35C009F1DDD /* Consts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		AD2F0D98BD77839F19E746DF /* Pods-TestTask.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestTask.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestTask/Pods-TestTask.release.xcconfig"; sourceTree = "<group>"; };
 		EC084B09A01C5D54A3C3691E /* Pods-TestTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestTask.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestTask/Pods-TestTask.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,6 +67,7 @@
 		894716CB205A550C009F1DDD /* TestTask */ = {
 			isa = PBXGroup;
 			children = (
+				894716E9205AF345009F1DDD /* Helpers */,
 				894716E0205A5580009F1DDD /* Models */,
 				894716DF205A5576009F1DDD /* ServerManager */,
 				894716DE205A556C009F1DDD /* ViewControllers */,
@@ -99,6 +102,14 @@
 				894716E5205A55ED009F1DDD /* ImageModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		894716E9205AF345009F1DDD /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				894716EA205AF35C009F1DDD /* Consts.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		8D7F4CFCE400C66E3228BA08 /* Pods */ = {
@@ -249,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				894716CD205A550C009F1DDD /* AppDelegate.swift in Sources */,
+				894716EB205AF35C009F1DDD /* Consts.swift in Sources */,
 				894716E4205A55CD009F1DDD /* ServerManager.swift in Sources */,
 				894716E8205A5F1E009F1DDD /* BigImageViewController.swift in Sources */,
 				894716E2205A55A8009F1DDD /* MainViewController.swift in Sources */,

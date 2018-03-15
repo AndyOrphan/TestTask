@@ -14,11 +14,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let mainTableView = UITableView()
     var realm: Realm!
     
-    var imageModels:Results<ImageModel>! {
-        didSet {
-            mainTableView.reloadData()
-        }
-    }
+    var imageModels:Results<ImageModel>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +29,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addObservers()
+    }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeObservers()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -41,8 +45,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     //MARK: UI
-    
-    
     
     func setupViews() {
         self.view.backgroundColor = UIColor.white
@@ -127,6 +129,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationController?.pushViewController(bigImageVC, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
+    }
+    
     //MARK: Server methods
     
     func searchImage(with query: String) {
@@ -144,7 +150,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func saveImage(with model: ImageModel) {
         try! realm.write {
             realm.add(model)
-            self.mainTableView.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                self.mainTableView.reloadData()
+            })
         }
     }
     
@@ -163,4 +171,25 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return true
     }
 
+    //MARK: Observers
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(showPopup), name: NSNotification.Name(rawValue: Consts.errorNotificationName), object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Consts.errorNotificationName), object: nil)
+    }
+    
+    //MARK: Popups
+    
+    @objc func showPopup(_ notification: Notification) {
+        if let errorStr = notification.userInfo?["errorStr"] as? String {
+            let alertController = UIAlertController(title: "Error", message: errorStr, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                alertController.dismiss(animated: true, completion: nil)
+                })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
 }
